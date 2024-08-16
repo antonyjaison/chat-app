@@ -20,11 +20,9 @@ function App() {
           </div>
         </div>
         <div className="w-3/4 h-full flex flex-col">
-          <ContactHeader avatar="/images/avatar.jpeg" isTyping="Typing..." name="Antony Jaison" key="1"/>
-          <div className=" flex-1 bg-red-300">
-            <ChatSection/>
-          </div>
-          <InputBox/>
+          <ContactHeader avatar="/images/avatar.jpeg" isTyping="Typing..." name="Antony Jaison" key="1" />
+          <ChatSection />
+          <InputBox />
         </div>
       </main>
     </>
