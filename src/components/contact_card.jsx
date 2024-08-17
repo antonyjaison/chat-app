@@ -2,7 +2,7 @@ import React from 'react';
 
 const ContactCard = ({ name, avatar, timeAgo, message }) => {
   return (
-    <div className="flex items-start p-4 border-b border-gray-300">
+    <div className="flex items-start p-4 border-b border-gray-300 cursor-pointer">
       <img 
         src={avatar} 
         alt={name} 

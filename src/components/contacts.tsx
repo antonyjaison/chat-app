@@ -1,22 +1,46 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ContactCard from './contact_card'
+import { BASE_URL } from '../utils/constants'
+import useContactStore from '../store/contact-store'
 
 const Contacts = () => {
+
+    const { setContacts, contacts } = useContactStore()
+
+    const authToken = localStorage.getItem('authToken') // or sessionStorage.getItem('authToken')
+
+    useEffect(() => {
+        const fetchContacts = async () => {
+            try {
+                const response = await fetch(`${BASE_URL}/api/contacts/get-all-contacts`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}` // or sessionStorage.getItem('authToken')
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch contacts');
+                }
+
+                const data = await response.json();
+                setContacts(data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchContacts();
+    }, [])
+
+    console.log(contacts)
+
     return (
         <div>
-            <ContactCard avatar="/images/avatar.jpeg" message="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi quod ribus cum" name="Antony" timeAgo="11 days ago" key="1" />
-            <ContactCard avatar="/images/avatar.jpeg" message="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quas doloribus cum" name="Antony" timeAgo="11 days ago" key="1" />
-            <ContactCard avatar="/images/avatar.jpeg" message="Lorem ipsum dolor sit amet consectetur, adipisicing euod commodi doloribus cum" name="Antony" timeAgo="11 days ago" key="1" />
-            <ContactCard avatar="/images/avatar.jpeg" message="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi quod commodi doloribus cum" name="Antony" timeAgo="11 days ago" key="1" />
-            <ContactCard avatar="/images/avatar.jpeg" message="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi quodloribus cum" name="Antony" timeAgo="11 days ago" key="1" />
-            <ContactCard avatar="/images/avatar.jpeg" message="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi quod commodi doloribus cum" name="Antony" timeAgo="11 days ago" key="1" />
-            <ContactCard avatar="/images/avatar.jpeg" message="Lorem ipsum dolor sit amet consectetur, adipisicing elit. doloribus cum" name="Antony" timeAgo="11 days ago" key="1" />
-            <ContactCard avatar="/images/avatar.jpeg" message="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi quod commodi doloribus cum" name="Antony" timeAgo="11 days ago" key="1" />
-            <ContactCard avatar="/images/avatar.jpeg" message="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasioloribus cum" name="Antony" timeAgo="11 days ago" key="1" />
-            <ContactCard avatar="/images/avatar.jpeg" message="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi quod commodi doloribus cum" name="Antony" timeAgo="11 days ago" key="1" />
-            <ContactCard avatar="/images/avatar.jpeg" message="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi quod commodi doloribus cum" name="Antony" timeAgo="11 days ago" key="1" />
-            <ContactCard avatar="/images/avatar.jpeg" message="Lorem ipsum dolor sit amet consectetur, adipisasi quod commodi doloribus cum" name="Antony" timeAgo="11 days ago" key="1" />
-            <ContactCard avatar="/images/avatar.jpeg" message="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi" name="Antony" timeAgo="11 days ago" key="1" />
+            {contacts.map(contact => (
+                <ContactCard avatar={contact.avatar || "https://i.pravatar.cc/300"} message={contact.message} name={contact.name} timeAgo={contact.timeAgo} key={contact.id} />
+            ))}
         </div>
     )
 }
